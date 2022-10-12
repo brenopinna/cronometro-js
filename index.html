@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Projeto Cronometro - JavaScript</title>
+   <style>
+      *{
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      header{
+         text-align: center;
+         padding: 10px 20px;
+      }
+
+      .timer{
+         width: 100%;
+         max-width: 300px;
+         margin: auto;
+         text-align: center;
+      }
+
+      .time{
+         margin-bottom: 10px;
+      }
+      
+      .time select, .time label{
+         text-align: center;
+         width: 80px;
+         height: 40px;
+         font-size: 1.5em;
+         outline: none;
+         border: 1px solid black;
+         border-radius: 3px;
+      }
+
+      .time label{
+         display: none;
+      }
+
+      select::-webkit-scrollbar{
+         width: 5px;
+      }
+
+      select::-webkit-scrollbar-thumb{
+         width: 100%;
+         border-radius: 8px;
+         background-color: lightgray;
+      }
+      
+      #start{
+         cursor: pointer;
+         width: 120px;
+         height: 40px;
+         font-size: 1.2em;
+      }
+   </style>
+</head>
+<body>
+   <header>
+      <h1>Cronômetro</h1>
+   </header>
+   <main>
+      <section class="timer">
+         <div class="time">
+            <label id="min-label" for="min"></label>
+            <select name="min" id="min"></select>
+            <label id="sec-label" for="sec"></label>
+            <select name="sec" id="sec"></select>
+         </div>
+         <button id="start">Iniciar</button>
+      </section>
+   </main>
+<script>
+   const minInput = document.getElementById("min");
+   const secInput = document.getElementById("sec");
+   const minLabel = document.getElementById("min-label");
+   const secLabel = document.getElementById("sec-label");
+   const startButton = document.getElementById("start");
+   const bip = new Audio('./alarm.mp3')
+   bip.volume = 0.1;
+
+   criarOpcoes();
+
+   startButton.addEventListener("click", () => {
+      let minutes = minInput.value;
+      let seconds = secInput.value;
+
+      if(minutes == 0 && seconds == 0){
+         alert('O tempo deve ser maior que zero!')
+      }else{
+         esconder(minInput)
+         esconder(secInput)
+         
+         mostrar(minLabel)
+         mostrar(secLabel)
+         
+         minLabel.innerText = minutes > 10 ? minutes : '0' + minutes;
+         secLabel.innerText = seconds > 10 ? seconds : '0' + seconds;
+
+         const timer = setInterval(() => {
+            const initialTime = parseInt(minutes) * 60 + parseInt(seconds);
+            const remainingTime = initialTime - 1
+
+            if(remainingTime == 0){
+               bip.play();
+               clearInterval(timer)
+            }
+
+            minutes = Math.floor(remainingTime / 60);
+            seconds = remainingTime % 60;
+            
+            minLabel.innerText = minutes > 10 ? minutes : '0' + minutes;
+            secLabel.innerText = seconds > 10 ? seconds : '0' + seconds;
+         }, 1000)
+      }
+   });
+
+   function criarOpcoes(){
+      for(let i = 0; i <= 60; i++){
+         const option = `<option value="${i}">${i}</option>`;
+         minInput.innerHTML += option;
+         secInput.innerHTML += option;
+      }
+   }
+
+   function esconder(element){
+      element.style.display = 'none';
+   }
+
+   function mostrar(element){
+      element.style.display = 'inline-block';
+   }
+</script>
+</body>
+</html>
