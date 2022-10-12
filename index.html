@@ -36,6 +36,7 @@
          font-size: 1.5em;
          outline: none;
          border: 1px solid black;
+         line-height: 40px;
          border-radius: 3px;
       }
 
@@ -110,6 +111,7 @@
             if(remainingTime == 0){
                bip.play();
                clearInterval(timer)
+               resetarTimer();
             }
 
             minutes = Math.floor(remainingTime / 60);
@@ -135,6 +137,18 @@
 
    function mostrar(element){
       element.style.display = 'inline-block';
+   }
+
+   function resetarTimer(){
+      minInput.value = 0;
+      secInput.value = 0;
+      mostrar(minInput)
+      mostrar(secInput)
+
+      esconder(minLabel)
+      esconder(secLabel)
+      minLabel.innerText = 0;
+      secLabel.innerText = 0;
    }
 </script>
 </body>
